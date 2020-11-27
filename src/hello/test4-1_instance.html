@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>p48</title>
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+</head>
+<body>
+<article id="test">
+    <p v-text="hi"></p>
+    {{name}}
+    <pre>
+내장 옵션들은 모두 '$' 사용
+    var vm = new Vue({
+        //HTML 적용 요소 선언 : 한번에 하나만. class와 연결 시킬 때도 제일 첫번째 class에 적용됨
+        //동적 연결을 원할경우 vm.$mount('#test')
+    el : "#test",
+        //바로 적용할 값을 선언하지않고 변수룰 불러왔으므로 유동적인 값 적용
+    data : model,
+        //hello:"hello"    - X
+    })
+    </pre>
+    <hr>
+</article>
+
+
+<script type="text/javascript">
+    var model = {
+        name : "홍길동",
+        hi:"hi"
+    }
+
+    // vue instance 선언
+    var vm = new Vue({
+        //HTML 적용 요소 선언 : 한번에 하나만. class와 연결 시킬 때도 제일 첫번째 class에 적용됨
+        //동적 연결을 원할경우 vm.$mount('#test')
+        el : "#test",
+
+        //바로 적용할 값을 선언하지않고 변수룰 불러왔으므로 유동적인 값 적용
+        data : model,
+            hello:"hello"    // X
+    })
+
+</script>
+</body>
+</html>

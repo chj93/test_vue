@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://unpkg.com/vue"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <!--v-if, v-show-->
+    <div id="main">
+        <h4>v-if, v-show Directive</h4>
+        <pre>값에 조건부여. 값을 0미만으로 바꿀경우 input tag 옆 img tag 활성화
+        v-if : element generation
+        v-show : display none or show
+        </pre>
+        <input type="text" v-model="amount">
+            <img v-if="amount < 0" src="http://sample.bmaster.kro.kr/img/error.png"
+                 title="마이너스는 허용하지 않습니다"
+                 style="width:15px; height:15px; vertical-align:middle" />
+    </div>
+
+    <!--v-if, v-else -->
+    <div id="account" style="margin-top:20px;">
+        <h4>-v-if, v-else Directive</h4>
+        <p>show, if와 else, else if 함께사용 가능</p><br>
+        잔고 : <input type="text" v-model="balance" />
+        <br />
+        회원님의 등급 :
+        <span v-show="balance >= 1000000">Gold</span>
+        <span v-else-if="balance >= 500000">Silver</span>
+        <span v-else-if="balance >= 200000">Bronze</span>
+        <span v-else>Basic</span>
+    </div>
+
+
+    <script>
+        //Model
+        let app =new Vue({
+            el:'#main',
+            data:{
+                amount : 0,
+            }
+
+        })
+
+        let simple1 = new Vue({
+            el : '#account',
+            data : {
+                balance : 0
+            }
+        })
+
+
+    </script>
+
+</body>
+</html>

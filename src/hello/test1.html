@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome to Vue</title>
+  <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+  <!--View-->
+  <div id="app">
+    <h6>{{model}}</h6>
+    <h6 id="msg1">{{ mag1 }}</h6>
+    <h6 v-text="mag1"></h6>
+    <!-- greeting == 38Line Model -->
+    <h6 v-html="mag2"></h6>
+
+    <ul>
+        <li>
+        <!--렌더링 방식 1 - text 형태로 불러옴 -->
+        {{mag1}}
+        <a :href="docsURL" target="_blank">
+          {{ humanizeURL(docsURL) }}
+        </a>
+      </li>
+      <li>
+        For live help with simple questions, check out
+        <a :href="discordURL" target="_blank">
+          the Discord chat
+        </a>
+      </li>
+      <li>
+        For more complex questions, post to
+        <a :href="forumURL" target="_blank">
+          the forum
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <script>
+    //Model
+    let model ={
+      modelMsg : 'hi'
+    };
+    //ModelView
+    let app = new Vue({
+      el: '#app',
+      //HTML element : id:app
+
+      data: {
+        greeting: 'Model test',
+        mag1: '<u>new massge1</u>',
+        mag2: 'new massge2',
+        docsURL: 'http://vuejs.org/guide/',
+        discordURL: 'https://chat.vuejs.org',
+        forumURL: 'http://forum.vuejs.org/',
+        model
+      },
+      //사용할 Model
+
+      methods: {
+        humanizeURL: function (url) {
+          return url
+            .replace(/^https?:\/\//, '')
+            .replace(/\/$/, '')
+        }
+      }
+    })
+  </script>
+</body>
+</html>

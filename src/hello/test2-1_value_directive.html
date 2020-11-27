@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://unpkg.com/vue"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="main">
+    <!--v-text-->
+        <h4>v-text,Mustache Directive</h4>
+        <p>==innerText</p>
+        <h5>{{msg1}}</h5>
+        <h5 v-text="msg2"></h5>
+    <!--v-html-->
+        <h4>v-html Directive:보안취약</h4>
+        <p>==innerHTML</p>
+        <h6 v-html="msg1"></h6>
+        <h6 v-html="msg2"></h6>
+        <hr>
+    <!--v-bind-->
+        <h4>v-bind Directive</h4>
+        <p>tag내 요소에 적용시킬 값 ':' 로 줄여 사용가능</p>
+        <input type="text" v-bind:value="tagEl" :id="tagEl">
+    <!--v-model-->
+        <h4>v-model Directive</h4>
+        <p>양방향 directive : input value 처럼 바껴야 하는 값에 주로 적용</p>
+        <input type="text" v-model:value="fluidMsg" :id="fluidMsg">
+        <br />
+        input change value : <h2 v-text="fluidMsg"></h2>
+        <br />
+                <p>Array를 이용한 값 확인</p><br/>
+                <input type="checkbox" value="1" v-model="fruits">1
+                <input type="checkbox" value="2" v-model="fruits">2
+                <input type="checkbox" value="3" v-model="fruits">3
+                <input type="checkbox" value="4" v-model="fruits">4
+                <input type="checkbox" value="5" v-model="fruits">5
+
+                <br />
+                Checked  : <span v-html="fruits"></span>
+
+        <hr />
+    <!--v-if, v-show-->
+        <h4>v-if, v-show Directive</h4>
+        <pre>값에 조건부여. 값을 0미만으로 바꿀경우 input tag 옆 img tag 활성화
+        v-if : element generation
+        v-show : display none or show
+        </pre>
+        <input type="text" v-model="amount">
+            <img v-if="amount < 0" src="http://sample.bmaster.kro.kr/img/error.png"
+                 title="마이너스는 허용하지 않습니다"
+                 style="width:15px; height:15px; vertical-align:middle" />
+    </div>
+    <!--#main-->
+
+
+    <script>
+        //Model
+        let app =new Vue({
+            el:'#main',
+            data:{
+                msg1:'txt msg1',
+                msg2:'<u>tag msg2</u>',
+                tagEl:'tagElMsg3',
+                fluidMsg: '',
+                fruits : [],
+                amount : 0
+            }
+
+        })
+
+
+
+    </script>
+
+</body>
+</html>

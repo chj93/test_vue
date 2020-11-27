@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>p55</title>
+    <style>
+        #list  { width: 400px; border:1px solid black; border-collapse:collapse; }
+        #list td, #list th { border:1px solid black;  text-align:center; }
+        #list > thead > tr { color:yellow; background-color: purple; }
+    </style>
+</head>
+<body>
+<pre>
+watch : computed option과 비슷하나 긴 처리시간이 필요한 비동기 처리에 적합
+    속성의 이름과 해당 속성이 변경 되었을 때 호출할 함수.
+    값이 바뀔 때마다 매번 함수 호출 됨.
+</pre>
+<div id="example">
+    <p>
+        이름 : <input type="text" v-model="name" placeholder="두글자 이상을 입력하세요" />
+    </p>
+    <table id="list">
+        <thead>
+        <tr>
+            <th>번호</th><th>이름</th><th>전화번호</th><th>주소</th>
+        </tr>
+        </thead>
+        <tbody id="contacts" >
+        <tr v-for="contact in contactlist">
+            <td>{{contact.no}}</td>
+            <td>{{contact.name}}</td>
+            <td>{{contact.tel}}</td>
+            <td>{{contact.address}}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div v-show="isProcessing === true">조회중</div>
+</div>
+
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
+<!--underscore.js 제공. _.debounce == 300밀리초 이후 재 호출(짧은시간 너무 많은 API 요청 막아줌)-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.auto.min.js"></script>
+<script type="text/javascript">
+    var vm = new Vue({
+        el : '#example',
+        data : {
+            name : "",
+            isProcessing : false,
+            contactlist : []
+        },
+        /*
+        watch : computed option과 비슷하나 긴 처리시간이 필요한 비동기 처리에 적합
+        속성의 이름과 해당 속성이 변경 되었을 때 호출할 함수.
+        값이 바뀔 때마다 매번 함수 호출 됨.
+        */
+        watch : {
+            name : function(val) {
+            //name data 값이 바뀔 경우 지정 함수에 인자(val)로 값을 넘겨 줌.
+                if (val.length >= 2) {
+                //입력한 name==val이 2글자 이상일경우
+                    this.fetchContacts();
+                    //fetchContacts() 함수 호출
+                } else {
+                    this.contactlist = [];
+                }
+            }
+        },
+        methods : {
+            fetchContacts : _.debounce(function() {
+            //underscore.js 제공. _.debounce == 300밀리초 이후 재 호출(짧은시간 너무 많은 API 요청 막아줌)
+            //불필요한 트래픽 줄임
+                this.contactlist = [];
+                this.isProcessing = true;
+                //변수 초기화
+                var url = "http://sample.bmaster.kro.kr/contacts_long/search/"
+                    + this.name;
+                var vm = this;
+                console.log(vm); // == Vue instance
+                fetch(url)
+                //API를 이용한 이름 검색 수행
+                //promise 객체 이용(동기화 하고 싶은 비동기 데이터 처리)
+                //.then 동기처리할 작업, .catch 오류시 처리방법
+                    .then(function(response) {
+                        return response.json()
+                    }).then(function(json) {
+                    vm.contactlist = json;
+                    vm.isProcessing = false;
+                }).catch(function(ex) {
+                    console.log('parsing failed', ex);
+                    vm.contactlist = [];
+                    vm.isProcessing = false;
+                })
+
+            }, 300)
+        }
+    })
+</script>
+</body>
+</html>

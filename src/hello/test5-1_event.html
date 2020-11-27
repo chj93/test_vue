@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p70</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <style>
+        .layout1 { margin:30px 30px 30px 30px; }
+        html, body { margin: 0;padding: 0; }
+        #example2 {
+            height: 98vh; min-height: 100%; padding:5px
+        }
+    </style>
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+
+</head>
+<body>
+    <pre>
+    Event Directive
+        작성방법
+           1. v-on:eventName
+           2. @eventName
+        Event Name
+            W3C 표준 HTML Dom Evnet Model + JS Event 객체 + Vue 제공 객체(p75)
+
+    </pre>
+    <div id="example" class="container layout1">
+        <h4>기본 예시</h4>
+        <p><input type="text" v-model="amount" class="form-control" /></p>
+        <p>
+            <!--방법1-->
+            <button id="deposit1" @click="balance=0"
+                    class="btn btn-primary">잔고 초기화</button>
+            <button id="deposit2" v-on:click="deposit($event)"
+                    class="btn btn-primary">예금</button>
+            <!--클릭했을 때 deposit method call-->
+            <button id="withdraw" @click="withdraw"
+                    class="btn btn-primary">인출</button>
+            <!--클릭했을 때 withdraw method call-->
+        </p>
+        <h3>계좌 잔고 : {{balance}}</h3>
+    </div>
+
+    <script type="text/javascript">
+        var vm = new Vue({
+            el : "#example",
+            data : {
+                amount : 0,
+                balance : 0,
+            },
+            methods : {
+                deposit : function(e) {
+                    var amt = parseInt(this.amount);
+                    if (amt <= 0) {
+                        alert("0보다 큰 값을 예금해야 합니다");
+                    } else {
+                        this.balance += amt;
+                    }
+                },
+                withdraw : function(e) {
+                    var amt = parseInt(this.amount);
+                    if (amt <= 0) {
+                        alert("0보다 큰 값을 인출할 수 있습니다");
+                    } else if (amt > this.balance) {
+                        alert("잔고보다 많은 금액을 인출할 수 없습니다");
+                    } else {
+                        this.balance -= amt;
+                    }
+                }
+            }
+        })
+    </script>
+    <hr/>
+    <h4>기본 이벤트 실행 중지 예시</h4>
+    <p>
+        contextmenu event가 실행될때 preventDefault() method를 이용하여 실행 막음 <br/>
+        방법 1  preventDefault() 사용 <br/>
+        방법 2  @evnetName.prevent 사용 <br/>
+        주로 방법2를 사용하지만 아래 예제와같이 조건 논리식의 결과에 따라 호출해야할 경우 방법1 사용해야 함.
+    </p>
+
+    <!-- 방법1
+    <div id="example2" v-on:contextmenu="ctxStop">
+    -->
+
+    <!--방법2-->
+    <div id="example2" v-on:contextmenu.prevent="ctxStop">
+
+        <a href="https://facebook.com" @click="confirmFB">페이스북</a>
+    </div>
+    <script type="text/javascript">
+        var vm = new Vue({
+            el : "#example2",
+            methods: {
+                /*방법1
+                ctxStop : function(e) {
+                    e.preventDefault();
+                    //오른쪽 마우스 금지
+                },
+                */
+                //방법2
+                ctxStop : function(e) {
+
+                },
+                confirmFB : function(e) {
+                    if (!confirm("페이스북으로 이동할까요?")) {
+                        e.preventDefault();
+                        //사용자 확인 호출 : 취소를 누를 경우 행 중지
+                    }
+                }
+            }
+        })
+    </script>
+
+
+</body>
+</html>
