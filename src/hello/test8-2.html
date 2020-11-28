@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>p126</title>
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+</head>
+
+<body>
+    <pre>
+컴포넌트 사용시 주의할 점
+    1. 템플릿 문자열 안에서 루트 요소는 하나여만 함
+
+        -문제 상황
+        &#60;template id="ex1"&#62;
+            &#60;div&#62;1&#60;/div&#62;
+            &#60;div&#62;2&#60;/div&#62;
+        &#60;/template&#62;
+
+        -해결 : root div 생성
+        &#60;template id="ex1"&#62;
+            &#60;div>
+                &#60;div&#62;1&#60;/div&#62;
+                &#60;div&#62;2&#60;/div&#62;
+            &#60;/div>
+        &#60;/template>
+
+    2. html요소는 자식요소로 포함시킬 수 있는 요소들이 정해져 있으므로 구문분석 오류 발생('optinn is' 사용)
+        - .vue확장자를 쓰는 single file component일 경우 제외
+
+        &#60;div&#62; id="app"&#62;
+            &#60;select&#62;
+                &#60;option is="option-component"&#62;&#60;/option&#62;
+                &#60;option is="option-component"&#62;&#60;/option&#62;
+            &#60;/select&#62;
+        &#60;div/&#62;
+
+    3. data option
+        컴포넌트에서 데이터 옵션을 함수로 지정할 때 리턴값은 반드시 함수 내부에 선언된 객체여야
+    </pre>
+    <h4>2번 Ex</h4>
+    <script type="text/javascript">
+        Vue.component('option-component', {
+            template : '<option>hello</option>'
+        })
+    </script>
+    <div id="app">
+      <!-- 오류
+        <select>
+            <option-component></option-component>
+            <option-component></option-component>
+        </select>
+        -->
+        <!-- 해결 -->
+        <select>
+            <option is="option-component"></option>
+            <option is="option-component"></option>
+        </select>
+    </div>
+    </body>
+    <script type="text/javascript">
+        Vue.config.devtools = true;
+        var v = new Vue({
+            el : '#app'
+        })
+    </script>
+
+    <h4>3번 Ex</h4>
+    <template id="timeTemplate">
+        <div>
+            <span>{{nowTS}}</span>
+            <button v-on:click="timeClick">현재 시간</button>
+        </div>
+    </template>
+    <script type="text/javascript">
+        Vue.component('time-component', {
+            template : '#timeTemplate',
+            //문제상황
+            //data : { nowTS : 0 },
+            data : function() {
+                return { nowTS : 0 };
+            },
+
+            methods : {
+                timeClick : function(e) {
+                    this.nowTS = (new Date()).getTime();
+                }
+            }
+        })
+    </script>
+    <div id="app2">
+        <time-component></time-component>
+        <time-component></time-component>
+    </div>
+    <script type="text/javascript">
+        Vue.config.devtools = true;
+        var v = new Vue({
+            el : '#app2'
+        })
+    </script>
+
+</html>

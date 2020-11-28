@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p120</title>
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>  <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+</head>
+<body>
+    <pre>ddd
+Vue.js : component를 조합하여 작성
+
+Component : 부모-자식 관계로 트리 구조 형셩. 부모가 자식을 포함하는 형태
+
+        [부모] ----속성(Props)----> [자식]
+        [부모] <-------Event------ [자식]
+    EventHandler               EventTrigger
+
+          - .sync 수식어 이용하여 양방향 속성 전달 가능하나 권장하지 x
+
+    대부분의 instance option 사용 가능하나, data option 사용시 반드시 함수로 작성하고, 함수 내부에서 객체를 리턴하도록 작성
+    (컴포넌트에서 데이터 옵션은 각 컴포넌트의 로컬 상태를 관리하기 위한 용도, 객체 값으로 작성할 수 없고 모두 동일한 참조형 값)
+
+    선언방식
+        ex1 | inline 선언
+        Vue.component('ex1', {
+            template : '&#60;div&#62;Ex1!!&#60;/div&#62;'
+            //inline template : 문자열을 사용해 템플릿 지정
+        })
+
+        ex2 | xml로 선언
+        &#60;template id="helloTemplate"&#62;
+            &#60;div&#62;hello world!!!&#60;/div&#62;
+        &#60;/template&#62;
+        &#60;script type="text/javascript"&#62;
+            Vue.component('hello-component', {
+                template : '#helloTemplate'
+                //id 값으로 component 찾아가도록
+            })
+        &#60;/script&#62;
+
+        ex3 | script로 선언
+        &#60;script type="text/x-template" id="helloTemplate"&#62;
+            &#60;div&#62;hello world!!!&#60;/div&#62;
+        &#60;script type="text/javascript"&#62;
+          Vue.component('hello-component', {
+              template : '#helloTemplate'
+          })
+        &#60;/script&#62;
+    </pre>
+    <h4>ex 1 | inline 선언</h4>
+    <script type="text/javascript">
+        //컴포넌트 선언 : -를 사용하는 kebob casng사용
+        Vue.component('ex1', {
+            template : '<div>Ex1!!</div>'
+            //inline template : 문자열을 사용해 템플릿 지정
+        })
+    </script>
+    <body>
+    <div id="app1">
+        <ex1></ex1>
+        <ex1></ex1>
+    </div>
+    </body>
+    <script type="text/javascript">
+        Vue.config.devtools = true;
+        //Vue devtools 사용여부 (디버깅툴)
+        var v = new Vue({
+            el : '#app1'
+        })
+    </script>
+
+    <hr />
+
+    <h4>ex 2 | xml 선언</h4>
+
+    <template id="helloTemplate1">
+        <div>hello world!!!</div>
+    </template>
+    <script type="text/javascript">
+        Vue.component('hello-component', {
+            template : `#helloTemplate1`
+            //id 값으로 component 찾아가도록
+        })
+    </script>
+    <body>
+    <div id="app2">
+        <hello-component1></hello-component1>
+        <hello-component1></hello-component1>
+        <hello-component1></hello-component1>
+    </div>
+    </body>
+    <script type="text/javascript">
+        Vue.config.devtools = true;
+        var v = new Vue({
+            el : '#app2'
+        })
+    </script>
+    <hr />
+    <h4>ex 3 | script 선언</h4>
+    <script type="text/x-template" id="helloTemplate2">
+        <div>hello world!!!</div>
+    </script>
+    <script type="text/javascript">
+        Vue.component('hello-component2', {
+            template : '#helloTemplate2'
+        })
+    </script>
+    <body>
+    <div id="app3">
+        <hello-component2></hello-component2>
+        <hello-component2></hello-component2>
+        <hello-component2></hello-component2>
+    </div>
+    </body>
+    <script type="text/javascript">
+        Vue.config.devtools = true;
+        var v = new Vue({
+            el : '#app3'
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>p100</title>
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+</head>
+<body>
+    <h4>inline style : HTML 요소에 직접 적용 될 css를 작성하는 방식 (권장x)</h4>
+    <p>v-bind:style로 작성</p>
+
+    <div id="example1">
+        <h5>Ex1. mouse over, out 시 적용 style 변화 </h5>
+        <button id="a" v-bind:style="style1" @mouseover.stop="overEvent"
+                @mouseout.stop="outEvent">테스트</button>
+    </div>
+    <script type="text/javascript">
+        var vm = new Vue({
+            el : "#example1",
+            data : {
+                style1 : { backgroundColor:"aqua", border:'solid 1px gray',
+                    with:'100px', textAlign:'center' }
+            },
+            methods : {
+                overEvent : function(e) {
+                    this.style1.backgroundColor = "purple";
+                    this.style1.color = "yellow";
+                },
+                outEvent : function(e) {
+                    this.style1.backgroundColor = "aqua";
+                    this.style1.color = "black";
+                }
+            }
+        })
+    </script>
+    <hr />
+    <div id="example2">
+        <h5>Ex2. 여러개의 style 객체 적용 : array 이용</h5>
+        <button id="btn1" v-bind:style="[myColor,myLayout]">버튼1</button>
+    </div>
+    <script type="text/javascript">
+        var vm = new Vue({
+            el : "#example2",
+            data : {
+                myColor : { backgroundColor:'beige', color:'brown' },
+                myLayout : { width:'150px', height:'80px', textAlign:'center' }
+            }
+        })
+    </script>
+
+</body>
+</html>

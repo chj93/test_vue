@@ -1,15 +1,197 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>p86</title>
 </head>
-<body>
-<pre>
-이벤트 수식어
-    .prevent
-    .stop
+<style>
+    html, body { margin: 0;padding: 0; }
+    #list  { width: 400px; border:1px solid black; border-collapse:collapse; }
+    #list td, #list th { border:1px solid black;  text-align:center; }
+    #list > thead > tr { color:yellow; background-color: purple; }
+    [v-cloak] { display: none; }
+    #mouseEx {
+        margin-top: 50px;
+        height: 98vh; min-height: 100%; padding:10px
+    }
+</style>
 
-</pre>
+<body>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.auto.min.js"></script>
+    <pre>
+이벤트 실행중지 핸들러(ex5-1)
+    .preventDefault();
+    .stopPropagation();
+
+이벤트 수식어 (여러 개 이어 붙여서 사용 가능)
+    .prevent    기본이벤트 막기(브라우저는 모름)      (ex5-1)
+    .passive    기본이벤트 막기(브라우저 알게끔)
+    .stop       event stop                     (ex5-2)
+    .self       호출단계에서만 이벤트 발생           (ex5-2)
+    .capture    포착단계에서만 이벤트 발생           (ex5-2)
+    .once       이벤트 한번만 발생
+
+    Ex
+        v-on:click.prevent.self        모든 클릭 막음
+        v-on:click.self.prevent        특정요소만 클릭 막음
+
+키코드 수식어 : v-on:keyup.Keycode == @keyup.keyCode
+   KeyBoardEvent.Key를 통해 노출된 유효키를 낙타표기법으로 변환하여 사용 가능
+
+    - Key code Ex
+    (ctrl, ait, shift, meta는 수식어 키 - 눌러진경우에)
+    :page-down ($event.key === 'PageDown')
+    :exact (눌러지지 않은 경우 : event를 확실히 하기 위해)
+    :enter
+    :tab
+    .delete
+    .esc       .ctrl
+    .space     .alt
+    .up        .shift
+    .down      .meta(window, commeand)
+    .left (마우스 버튼)
+    .right(Mouse)
+    .middel(Scroll)
+
+
+    - 키코드 결합, 지정하기 == config.KeyCodes
+    Ex
+        v-on:keyup.ctrl.67="copy"  (ctrl + c)
+        Vue.config.keyCodes.f1 = 112            // F11의 키코드인112를 F11로 할당
+        @keyup.alt.67="clear"                   //Alt + c
+    </pre>
+
+    <div id="keyEx"  v-cloak>
+        <p>
+            <!--
+            방법 1
+            이름 : <input type="text" v-model="name" v-on:keyup="search"
+                        placeholder="두글자 이상을 입력하세요" />
+            -->
+            이름 : <input type="text" v-model="name" v-on:keyup.13="search"
+                        placeholder="두글자 이상을 입력하세요" />
+            <!--13번 == Enter key-->
+        </p>
+        <table id="list">
+            <thead>
+            <tr>
+                <th>번호</th><th>이름</th><th>전화번호</th><th>주소</th>
+            </tr>
+            </thead>
+            <tbody id="contacts" >
+            <tr v-for="contact in contactlist">
+                <td>{{contact.no}}</td>
+                <td>{{contact.name}}</td>
+                <td>{{contact.tel}}</td>
+                <td>{{contact.address}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <div v-show="isProcessing === true">조회중</div>
+    </div>
+    <script type="text/javascript">
+        var vm = new Vue({
+            el : '#keyEx',
+            data : {
+                name : "",
+                isProcessing : false,
+                contactlist : []
+            },
+            methods : {
+                search : function(e) {
+                    // 방법 1
+                    //if (e.keyCode === 13) {
+                    var val = e.target.value;
+                    if (val.length >= 2) {
+                        this.fetchContacts();
+                    } else {
+                        this.contactlist = [];
+                    }
+                },
+                fetchContacts : function() {
+                    this.contactlist = [];
+                    this.isProcessing = true;
+                    var url = "http://sample.bmaster.kro.kr/contacts_long/search/" + this.name;
+                    var vm = this;
+                    fetch(url)
+                        .then(function(response) {
+                            return response.json()
+                        }).then(function(json) {
+                        vm.contactlist = json;
+                        vm.isProcessing = false;
+                    }).catch(function(ex) {
+                        console.log('parsing failed', ex);
+                        vm.contactlist = [];
+                        vm.isProcessing = false;
+                    })
+
+                }
+            }
+        })
+    </script>
+
+    <div id="mouseEx" v-on:contextmenu.prevent="ctxStop"
+         @mouseup.left="leftMouse" @mouseup.right="rightMouse">
+        <div>
+            Left Click : 왼쪽으로<br />
+            Right Click : 오른쪽으로
+        </div>
+        <img src="https://placeimg.com/100/100/animals" v-bind:style="{ position:'absolute', left: pos.left + 'px', top:pos.top +'px' }" />
+    </div>
+<!--
+    <div id="keytest">
+        <p>
+            background : <input type="text" v-model="name" v-on:keyup="search"
+                        placeholder="색깔 입력후 Enter Key" />
+        </p>
+    </div>
+-->
+
+    <script type="text/javascript">
+        var vm = new Vue({
+            el : "#mouseEx",
+            data : {
+                pos : { left : 100, top:1000 }
+            },
+            methods: {
+                ctxStop : function(e) { },
+                leftMouse : function(e) {
+                    if (this.pos.left > 30)
+                        this.pos.left -= 30;
+                    console.log("Move Left!!");
+                },
+                rightMouse : function(e) {
+                    this.pos.left += 30;
+                    console.log("Move Right!!");
+                }
+            }
+        })
+    </script>
+
+<!--    <script type="text/javascript">
+        let keytest =new Vue({
+            el:'#keytest',
+            data : {
+              color : ""
+            },
+            methods : {
+                search : function(e) {
+                    if (e.keyCode === 13) {
+                    //13 == enter Key code
+                        super.color=e.target.value;
+
+                    }
+                        if (val.length >= 2) {
+                            this.fetchContacts();
+                        } else {
+                            this.contactlist = [];
+                        }
+                    }
+                },
+        })
+    </script>-->
+
 </body>
 </html>
