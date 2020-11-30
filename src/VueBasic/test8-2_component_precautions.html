@@ -36,13 +36,13 @@
             &#60;/select&#62;
         &#60;div/&#62;
 
-    3. data option
-        컴포넌트에서 데이터 옵션을 함수로 지정할 때 리턴값은 반드시 함수 내부에 선언된 객체여야
+    3. data option : component에서 사용하는 data는 함수여야 함
+        컴포넌트에서 데이터 옵션을 함수로 지정할 때 리턴값은 반드시 함수 내부에 선언된 객체여야 함
     </pre>
     <h4>2번 Ex</h4>
     <script type="text/javascript">
         Vue.component('option-component', {
-            template : '<option>hello</option>'
+            template : '<option>VueBasic</option>'
         })
     </script>
     <div id="app">
@@ -78,6 +78,7 @@
             template : '#timeTemplate',
             //문제상황
             //data : { nowTS : 0 },
+            //전역변수이므로  같은 값 할당되는 문제 발생
             data : function() {
                 return { nowTS : 0 };
             },

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>06-12</title>
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+</head>
+<body>
+<pre>
+props를 이용한 정보전달 방법 : Vue component를 정의할 때 props option을 작성하고, props명을 배열 혹은 객체 형태로 나열
+    컴포넌트 작성시 속성명              - 카멜표기법(myMessage)
+    태그에서 속성명을 사용할 정보 전달할 때 - 케밥표기법(my-message)
+
+</pre>
+<template id="listTemplate">
+<!-- 방법1. 배열 사용-->
+ <!-- myMessage ==  카멜표기법 사용-->
+<!--  <li>{{myMessage}}  {{name}}</li>  -->
+    <li>{{message}} {{count}} {{countries}}</li>
+</template>
+<script type="text/javascript">
+    //list-component 컴포넌트르 작성하면서 message라는 이름의 속성 정의
+    Vue.component('list-component', {
+        template : '#listTemplate',
+        <!-- myMessage ==  카멜표기법 사용-->
+        //방법1. 배열 사용
+        /*
+        props : [
+            'myMessage', 'name'
+        ]
+        */
+        //방법 2. 객체로 사용
+        props : {
+            message : {type:String, default:'Hi'},
+            //default == 기본값 설정
+            count : {type:Number, require:false },
+            //require == 필수값 여부
+
+            //속성으로 전달할 값이 배열이나 객체인 경우 - 기본값 부여시 반드시 함수 사용
+            countries : {
+                type: Array,
+                default: function () {
+                    return ['대한민국'];
+                }
+            }
+        }
+
+    })
+</script>
+<div id="app">
+    <ul>
+        <!--케밥표기법 사용-->
+        <!--방법1. 배열 사용
+        <list-component my-message="Hello" name="hj"></list-component>
+        <list-component my-message="씬짜오" name="jh"></list-component>
+        <list-component my-message="니하오마" name="somsom"></list-component>
+        -->
+        <!-- 방법2. 객체로 사용-->
+        <list-component message="씬짜오" count="21" :countries="['미국, 중국','배열2']"></list-component>
+        <!-- v-bind 를 사용 하지 않고 선언시 count="21"를 문자로 인식-->
+        <list-component message="니하오마" :countries="['배열','전달']"></list-component>
+        <list-component v-bind:count="1000"></list-component>
+    </ul>
+</div>
+</body>
+<script type="text/javascript">
+    Vue.config.devtools = true;
+    var vm = new Vue({
+        el : "#app"
+    })
+</script>
+</html>
